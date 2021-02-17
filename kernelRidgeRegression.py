@@ -1,6 +1,7 @@
 # kernelRidgeRegression.py
 
 import numpy as np
+import scipy.linalg
 
 class KernelRidgeRegression:
     """
@@ -16,10 +17,10 @@ class KernelRidgeRegression:
     def fit(self, X, y):
         n = X.shape[0]
         K = self.kernel(X, X)
-        K_inv = np.linalg.inv(K + self.alpha * n * np.eye(n))
-        self.coef = K_inv @ y
+        K_reg = K + self.alpha * n * np.eye(n)
+        self.coef = scipy.linalg.solve(K_reg, y)
         self.X = X
         return
 
     def predict(self, X):
-        return self.kernel(self.X, X) @ self.coef
+        return np.dot(self.kernel(X, self.X), self.coef)
