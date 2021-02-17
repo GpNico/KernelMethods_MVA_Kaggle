@@ -47,7 +47,7 @@ conda env create -f environment.yml
 
 If you have installed a new package, please export the environment:
 ```
-conda env export --no-builds | findstr -v "prefix" > environment.yml
+conda env update -f environment.yml --prune
 ```
 
 ## Run
