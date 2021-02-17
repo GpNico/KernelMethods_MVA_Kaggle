@@ -13,7 +13,7 @@ c) then start working on the raw sequences. Time to design a good kernel for thi
 # Technical details
 
 ## Requirements:
-- Python 3.6.9
+- Python 3.7.1
 
 ## Installation
 
@@ -40,14 +40,14 @@ pip freeze > requirements.txt
 
 ### Anaconda
 
-If you like to create your environment from scratch:
+Create the conda environment from the `environment.yml` file
 ```
 conda env create -f environment.yml
 ```
 
 If you have installed a new package, please export the environment:
 ```
-conda env export > environment.yml && pip freeze > requirements.txt
+conda env export --no-builds | findstr -v "prefix" > environment.yml
 ```
 
 ## Run
