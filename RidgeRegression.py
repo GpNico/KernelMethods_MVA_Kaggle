@@ -10,7 +10,7 @@ class RidgeRegression:
 
     def __init__(self, alpha):
         self.alpha = alpha
-        self.coef = 0
+        self.wRR = 0
         self.X = np.zeros((1,1))
     
     def fit(self, X, y):
