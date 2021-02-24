@@ -11,8 +11,8 @@ class KernelRidgeRegression:
     def __init__(self, kernel, alpha):
         self.kernel = kernel
         self.alpha = alpha
-        self.coef = 0
-        self.X = np.zeros((1,1))
+        self.coef: float
+        self.X: np.array
     
     def fit(self, X, y):
         n = X.shape[0]
@@ -24,3 +24,15 @@ class KernelRidgeRegression:
 
     def predict(self, X):
         return np.dot(self.kernel(X, self.X), self.coef)
+
+
+class KernelRidgeClassification(KernelRidgeRegression):
+    """
+    Ridge Classification using a kernel
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    
+    def predict(self, X):
+        return np.sign(super().predict(X))
