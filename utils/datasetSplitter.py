@@ -7,12 +7,16 @@ class TrainTestSplitter:
     """
     Classical dataset splitting
     """
-    def __init__(self, seed = 42):
+    def __init__(self, seed = 42, percent = 0.7):
         self.seed = seed
+        self.percent = percent
         self.train_idx: np.array
         self.test_idx: np.array
     
-    def generate_idx(self, X, percent):
+    def generate_idx(self, X, percent = None):
+        if percent == None:
+            percent = self.percent
+
         np.random.seed(self.seed)
         nrow = X.shape[0]
         train_size = int(percent * nrow)
@@ -24,7 +28,10 @@ class TrainTestSplitter:
         self.test_idx = shuffled_index[train_size:]
     
     def split(self, X):
-        return X[self.train_idx], X[self.test_idx]
+        try:
+            return X[self.train_idx], X[self.test_idx]
+        except KeyError:
+            return X.loc[self.train_idx], X.loc[self.test_idx]
 
 
 class BalancedTrainTestSplitter(TrainTestSplitter):
@@ -34,7 +41,10 @@ class BalancedTrainTestSplitter(TrainTestSplitter):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
     
-    def generate_idx(self, y, percent):
+    def generate_idx(self, y, percent = None):
+        if percent == None:
+            percent = self.percent
+
         np.random.seed(self.seed)
         idx0, idx1 = np.where(y == 0)[0], np.where(y == 1)[0]
 
