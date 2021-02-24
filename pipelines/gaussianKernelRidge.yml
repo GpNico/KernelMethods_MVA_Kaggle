@@ -1,0 +1,40 @@
+name: GaussianKernelRidge
+
+dataset:
+  X:
+    filepath: datasets/Xtr0_mat100.csv
+  y:
+    filepath: datasets/Ytr0.csv
+
+split:
+  filepath: utils/datasetSplitter.py
+  class: BalancedTrainTestSplitter
+  parameters: 
+    seed: 42
+    percent: 0.7
+
+preprocess:
+  filepath: utils/datasetPreprocess.py
+  X:
+    - transform: convert_numpy
+      parameters: {}
+  y:
+    - transform: recode
+      parameters: {}
+    - transform: convert_numpy
+      parameters: {}
+
+model:
+  filepath: kernelRidgeRegression.py
+  class: KernelRidgeClassification
+  parameters:
+    kernel: 
+      filepath: utils/kernels.py
+      class: gaussian_kernel
+    alpha: 0.00001
+
+evaluation:
+  filepath: utils/evaluation.py
+  metrics:
+    - accuracy
+
