@@ -49,6 +49,13 @@ If you have installed a new package, please export the environment:
 ```
 conda env export --no-builds | findstr -v "prefix" > environment.yml
 ```
+## Test
+
+To test if all is working (after modifying a file for example) run in terminal :
+
+```
+pytest
+```
 
 ## Run
 ```{bash}
