@@ -48,7 +48,7 @@ preprocess:
       parameters: {}
 
 model:
-  filepath: kernelRidgeRegression.py
+  filepath: models/kernelRidgeRegression.py
   class: KernelRidgeClassification
   parameters:
     kernel: 
