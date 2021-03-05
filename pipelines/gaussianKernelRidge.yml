@@ -1,10 +1,33 @@
 name: GaussianKernelRidge
 
-dataset:
-  X:
-    filepath: datasets/Xtr0_mat100.csv
-  y:
-    filepath: datasets/Ytr0.csv
+datasets:
+  - name: mat0
+    X:
+      filepath: datasets/Xtr0_mat100.csv
+      parameters:
+        delimiter: " "
+        header:
+    y:
+      filepath: datasets/Ytr0.csv
+      parameters: {}
+  - name: mat1
+    X:
+      filepath: datasets/Xtr1_mat100.csv
+      parameters:
+        delimiter: " "
+        header:
+    y:
+      filepath: datasets/Ytr1.csv
+      parameters: {}
+  - name: mat2
+    X:
+      filepath: datasets/Xtr2_mat100.csv
+      parameters:
+        delimiter: " "
+        header:
+    y:
+      filepath: datasets/Ytr2.csv
+      parameters: {}
 
 split:
   filepath: utils/datasetSplitter.py

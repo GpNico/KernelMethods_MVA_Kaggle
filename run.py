@@ -31,50 +31,59 @@ if __name__ == "__main__":
     with open(args.config) as config_file:
         config = yaml.safe_load(config_file)
     
-    # import pdb; pdb.set_trace()
-    # Read dataset
-    X = pd.read_csv(config["dataset"]["X"]["filepath"],
-                    delimiter = " ", header = None)
-    ## It is currently very important to drop Id before splitting or preprocessing
-    y = pd.read_csv(config["dataset"]["y"]["filepath"]).drop("Id", axis = 1) 
-
-    # Split dataset
+    # Importing pipeline elements
     ds_splitter = import_from_path(config["split"]["filepath"],
                                    config["split"]["class"]) (**config["split"]["parameters"])
 
-    ds_splitter.generate_idx(y)
-    X_train, X_test = ds_splitter.split(X)
-    y_train, y_test = ds_splitter.split(y)
-
-    # Preprocess dataset
     preprocess = import_from_path(config["preprocess"]["filepath"])
 
-    for transform in config["preprocess"]["X"]:
-        X_train = getattr(preprocess, transform["transform"])(X_train, **transform["parameters"])
-        X_test = getattr(preprocess, transform["transform"])(X_test, **transform["parameters"])
-
-    for transform in config["preprocess"]["y"]:
-        y_train = getattr(preprocess, transform["transform"])(y_train, **transform["parameters"])
-        y_test = getattr(preprocess, transform["transform"])(y_test, **transform["parameters"])
-
-    # Fit model
     model_params = config["model"]["parameters"]
     if "kernel" in model_params:
         model_params["kernel"] = import_from_path(model_params["kernel"]["filepath"],
-                                                  model_params["kernel"]["class"])
+                                                model_params["kernel"]["class"])
     model = import_from_path(config["model"]["filepath"],
-                             config["model"]["class"])(**config["model"]["parameters"])
+                            config["model"]["class"])(**config["model"]["parameters"])
     
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-
-    # Evaluate model
     evaluation = import_from_path(config["evaluation"]["filepath"])
+
+    # Lists filling information for the output dataframe
+    datasets = []
     metrics = []
     values = []
-    for metric in config["evaluation"]["metrics"]:
-        metrics.append(metric)
-        values.append(getattr(evaluation, metric)(y_pred, y_test))
-    
-    results = {"metrics": metrics, "values": values}
+
+    # Applying pipeline
+    # Iterate over datasets
+    for dataset in config["datasets"]:
+        # Read dataset
+        X = pd.read_csv(dataset["X"]["filepath"],
+                        **dataset["X"]["parameters"])
+        ## It is currently very important to drop Id before splitting or preprocessing
+        y = pd.read_csv(dataset["y"]["filepath"],
+                        **dataset["y"]["parameters"]).drop("Id", axis = 1) 
+
+        # Split dataset
+        ds_splitter.generate_idx(y)
+        X_train, X_test = ds_splitter.split(X)
+        y_train, y_test = ds_splitter.split(y)
+
+        # Preprocess dataset
+        for transform in config["preprocess"]["X"]:
+            X_train = getattr(preprocess, transform["transform"])(X_train, **transform["parameters"])
+            X_test = getattr(preprocess, transform["transform"])(X_test, **transform["parameters"])
+
+        for transform in config["preprocess"]["y"]:
+            y_train = getattr(preprocess, transform["transform"])(y_train, **transform["parameters"])
+            y_test = getattr(preprocess, transform["transform"])(y_test, **transform["parameters"])
+
+        # Fit model
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        # Evaluate model
+        for metric in config["evaluation"]["metrics"]:
+            datasets.append(dataset["name"])
+            metrics.append(metric)
+            values.append(getattr(evaluation, metric)(y_pred, y_test))
+        
+    results = {"datasets": datasets, "metrics": metrics, "values": values}
     print(pd.DataFrame.from_dict(results))
