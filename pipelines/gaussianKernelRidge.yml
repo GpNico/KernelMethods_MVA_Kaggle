@@ -60,4 +60,5 @@ evaluation:
   filepath: utils/evaluation.py
   metrics:
     - accuracy
+    - f1_score
 
