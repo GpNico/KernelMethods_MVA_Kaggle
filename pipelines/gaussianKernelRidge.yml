@@ -54,7 +54,9 @@ model:
     kernel: 
       filepath: utils/kernels.py
       class: gaussian_kernel
-    alpha: 0.00001
+      parameters:
+        gamma: 1
+    alpha: 0.000001
 
 evaluation:
   filepath: utils/evaluation.py

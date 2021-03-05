@@ -39,10 +39,12 @@ if __name__ == "__main__":
 
     model_params = config["model"]["parameters"]
     if "kernel" in model_params:
-        model_params["kernel"] = import_from_path(model_params["kernel"]["filepath"],
-                                                model_params["kernel"]["class"])
+        kernel_func = import_from_path(model_params["kernel"]["filepath"],
+                                       model_params["kernel"]["class"])
+        kernel_params = model_params["kernel"]["parameters"]
+        model_params["kernel"] = lambda X, Y: kernel_func(X,Y,**kernel_params)
     model = import_from_path(config["model"]["filepath"],
-                            config["model"]["class"])(**config["model"]["parameters"])
+                             config["model"]["class"])(**config["model"]["parameters"])
     
     evaluation = import_from_path(config["evaluation"]["filepath"])
 
