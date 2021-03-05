@@ -12,10 +12,10 @@ pparentdir = os.path.dirname(parentdir)
 sys.path.append(pparentdir)
 
 import kernels
-import logisticRegression
-import kernelLogisticRegression
-import ridgeRegression
-import kernelRidgeRegression
+import models.logisticRegression as logisticRegression
+import models.kernelLogisticRegression as kernelLogisticRegression
+import models.ridgeRegression as ridgeRegression
+import models.kernelRidgeRegression as kernelRidgeRegression
 
 def test_linear_ridge_regression():
     

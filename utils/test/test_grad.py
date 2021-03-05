@@ -12,8 +12,8 @@ pparentdir = os.path.dirname(parentdir)
 sys.path.append(pparentdir)
 
 import kernels
-import logisticRegression
-import kernelLogisticRegression
+import models.logisticRegression as logisticRegression
+import models.kernelLogisticRegression as kernelLogisticRegression
 
 def test_check_grad_logistic_regression():
 
