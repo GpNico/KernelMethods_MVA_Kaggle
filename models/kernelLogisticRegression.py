@@ -35,3 +35,14 @@ class KernelLogisticRegression:
 
     def predict(self, X):
         return np.dot(self.kernel(X, self.X), self.coef)
+
+class KernelLogisticClassification(KernelLogisticRegression):
+    """
+    Kernel logistic classification
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    
+    def predict(self, X):
+        return np.sign(super().predict(X))
