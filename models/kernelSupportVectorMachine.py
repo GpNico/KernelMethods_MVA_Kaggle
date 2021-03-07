@@ -1,12 +1,12 @@
-# SupportVectorMachine.py
+# kernelSupportVectorMachine.py
 
 import numpy as np
 import scipy.linalg
 from cvxopt import matrix, solvers
 
-class SVM:
+class KernelSVM:
     """
-        Support Vector Machine 
+        Kernel Support Vector Machine 
     """
 
     def __init__(self, kernel, alpha):
@@ -31,14 +31,16 @@ class SVM:
         
         self.coef = np.array(sol['x']).flatten()
 
+        self.X = X
+        
         return
 
     def predict(self, X):
         return np.dot(self.kernel(X, self.X), self.coef)
         
-class SVMClassification(SVM):
+class KernelSVMClassification(KernelSVM):
     """
-    SVM classification
+    Kernel SVM classification
     """
 
     def __init__(self, *args, **kwargs):

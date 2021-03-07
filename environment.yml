@@ -1,5 +1,6 @@
 name: KernelMethods
 channels:
+  - anaconda
   - conda-forge
   - defaults
 dependencies:
@@ -15,17 +16,20 @@ dependencies:
   - blas=1.0
   - bleach=3.3.0
   - brotlipy=0.7.0
-  - ca-certificates=2021.1.19
-  - certifi=2020.12.5
+  - ca-certificates=2020.10.14
+  - certifi=2020.6.20
   - cffi=1.14.5
   - chardet=4.0.0
   - colorama=0.4.4
   - cryptography=3.4.4
+  - cvxopt=1.2.0
   - cycler=0.10.0
   - decorator=4.4.2
   - defusedxml=0.6.0
   - entrypoints=0.3
   - freetype=2.10.4
+  - glpk=4.65
+  - gsl=2.4
   - icc_rt=2019.0.0
   - icu=67.1
   - idna=2.10

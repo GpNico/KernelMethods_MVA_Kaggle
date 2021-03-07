@@ -112,9 +112,9 @@ if __name__ == "__main__":
             datasets.append(dataset["name"])
             metrics.append(metric)
             values.append(getattr(evaluation, metric)(y_pred, y_test))
-    
-    df = pd.concat(dfs).astype('int32')
-    df.to_csv('submissions/' + out_csv, index = False)
+    if output:
+        df = pd.concat(dfs).astype('int32')
+        df.to_csv('submissions/' + out_csv, index = False)
         
     results = {"datasets": datasets, "metrics": metrics, "values": values}
     print(pd.DataFrame.from_dict(results))
