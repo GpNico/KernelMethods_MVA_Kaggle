@@ -30,7 +30,7 @@ class SVM:
         sol = solvers.qp(Q,p,G,h)
         
         self.coef = np.array(sol['x']).flatten()
-        
+
         return
 
     def predict(self, X):

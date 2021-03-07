@@ -20,7 +20,7 @@ import models.kernelRidgeRegression as kernelRidgeRegression
 def test_linear_ridge_regression():
     
     #Data
-    n_samples, n_features = 2*100, 2
+    n_samples, n_features = 2*300, 2
     X1 = np.random.multivariate_normal(np.array([1,-2]),np.eye(n_features),n_samples//2)
     X2 = np.random.multivariate_normal(2*np.ones(n_features),np.eye(n_features),n_samples//2)
     X = np.concatenate((X1,X2)).reshape(n_samples,n_features)
@@ -43,7 +43,7 @@ def test_linear_ridge_regression():
 def test_linear_logistic_regression():
     
     #Data
-    n_samples, n_features = 2*100, 2
+    n_samples, n_features = 2*300, 2
     X1 = np.random.multivariate_normal(np.array([1,-2]),np.eye(n_features),n_samples//2)
     X2 = np.random.multivariate_normal(2*np.ones(n_features),np.eye(n_features),n_samples//2)
     X = np.concatenate((X1,X2)).reshape(n_samples,n_features)

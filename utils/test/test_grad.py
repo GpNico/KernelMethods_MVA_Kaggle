@@ -53,7 +53,7 @@ def test_check_grad_kernel_logistic_regression():
     N = 50
     n = 100
     d = 2
-    tol = 10**-3
+    tol = 0.5*10**-2
     
     #Data
     X = np.random.randn(n,d)
