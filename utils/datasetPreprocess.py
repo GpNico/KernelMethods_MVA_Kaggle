@@ -10,3 +10,6 @@ def drop_columns(df, ids):
 def recode(df):
     df["Bound"] = 2*df["Bound"] - 1
     return df
+    
+def squeeze(array):
+    return array.squeeze()
