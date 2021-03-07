@@ -113,7 +113,7 @@ if __name__ == "__main__":
             metrics.append(metric)
             values.append(getattr(evaluation, metric)(y_pred, y_test))
     
-    df = pd.concat(dfs)
+    df = pd.concat(dfs).astype('int32')
     df.to_csv('submissions/' + out_csv, index = False)
         
     results = {"datasets": datasets, "metrics": metrics, "values": values}
