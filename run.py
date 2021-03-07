@@ -6,6 +6,7 @@ Script for running a specific pipeline from a given yaml config file
 import argparse
 import yaml
 from importlib import import_module
+import numpy as np
 
 import pandas as pd
 
@@ -26,10 +27,18 @@ def import_from_path(path_to_module, obj_name = None):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = __doc__)
     parser.add_argument("-c", "--config", help = "File path to the config file")
+    parser.add_argument("-o", "--output", help = "Path to the output file")
     args = parser.parse_args()
 
     with open(args.config) as config_file:
         config = yaml.safe_load(config_file)
+        
+    if args.output != None:
+        output = True
+        out_csv = args.output
+        dfs = []
+    else:
+        output = False
     
     # Importing pipeline elements
     ds_splitter = import_from_path(config["split"]["filepath"],
@@ -55,13 +64,17 @@ if __name__ == "__main__":
 
     # Applying pipeline
     # Iterate over datasets
-    for dataset in config["datasets"]:
+    for i, dataset in enumerate(config["datasets"]):
         # Read dataset
         X = pd.read_csv(dataset["X"]["filepath"],
                         **dataset["X"]["parameters"])
         ## It is currently very important to drop Id before splitting or preprocessing
         y = pd.read_csv(dataset["y"]["filepath"],
-                        **dataset["y"]["parameters"]).drop("Id", axis = 1) 
+                        **dataset["y"]["parameters"]).drop("Id", axis = 1)
+        
+        if output:
+            test = pd.read_csv(dataset["test"]["filepath"],
+                            **dataset["test"]["parameters"])
 
         # Split dataset
         ds_splitter.generate_idx(y)
@@ -76,16 +89,32 @@ if __name__ == "__main__":
         for transform in config["preprocess"]["y"]:
             y_train = getattr(preprocess, transform["transform"])(y_train, **transform["parameters"])
             y_test = getattr(preprocess, transform["transform"])(y_test, **transform["parameters"])
+        
+        if output:
+            for transform in config["preprocess"]["X"]:
+                test = getattr(preprocess, transform["transform"])(test, **transform["parameters"])
 
         # Fit model
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
+        
+        if output:
+            y_pred_test = model.predict(test)
+            y_pred_test = (y_pred_test + 1)/2
+            id = np.arange(1000*i, 1000*(i + 1))
+            dic = {'Id': id, 'Bound': y_pred_test[:, 0]}
+            df = pd.DataFrame(data = dic)
+            dfs.append(df)
+            
 
         # Evaluate model
         for metric in config["evaluation"]["metrics"]:
             datasets.append(dataset["name"])
             metrics.append(metric)
             values.append(getattr(evaluation, metric)(y_pred, y_test))
+    
+    df = pd.concat(dfs)
+    df.to_csv('submissions/' + out_csv, index = False)
         
     results = {"datasets": datasets, "metrics": metrics, "values": values}
     print(pd.DataFrame.from_dict(results))

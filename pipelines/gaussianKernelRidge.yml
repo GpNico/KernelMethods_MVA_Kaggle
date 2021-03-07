@@ -10,6 +10,13 @@ datasets:
     y:
       filepath: datasets/Ytr0.csv
       parameters: {}
+      
+    test:
+      filepath: datasets/Xte0_mat100.csv
+      parameters:
+        delimiter: " "
+        header:
+        
   - name: mat1
     X:
       filepath: datasets/Xtr1_mat100.csv
@@ -19,6 +26,13 @@ datasets:
     y:
       filepath: datasets/Ytr1.csv
       parameters: {}
+      
+    test:
+      filepath: datasets/Xte1_mat100.csv
+      parameters:
+        delimiter: " "
+        header:
+        
   - name: mat2
     X:
       filepath: datasets/Xtr2_mat100.csv
@@ -28,6 +42,13 @@ datasets:
     y:
       filepath: datasets/Ytr2.csv
       parameters: {}
+      
+    test:
+      filepath: datasets/Xte2_mat100.csv
+      parameters:
+        delimiter: " "
+        header:
+      
 
 split:
   filepath: utils/datasetSplitter.py
