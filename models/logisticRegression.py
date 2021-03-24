@@ -24,7 +24,7 @@ class LogisticRegression:
         
     def fit(self, X, y):
         n, d = X.shape
-        opt = scipy.optimize.fmin_l_bfgs_b(lambda w: self._J(w, X, y), x0 = np.zeros(d), fprime = lambda w: self._gradJ(w, X, y), factr = 10.)
+        opt = scipy.optimize.fmin_l_bfgs_b(lambda w: self._J(w, X, y), x0 = np.zeros(d), fprime = lambda w: self._gradJ(w, X, y), maxiter = 100, pgtol = 1e-4)
         #opt = scipy.optimize.minimize(lambda w: self._J(w, X, y), x0 = np.zeros(d), jac =  lambda w: self._gradJ(w, X, y))
         self.coef = opt[0]
         self.X = X

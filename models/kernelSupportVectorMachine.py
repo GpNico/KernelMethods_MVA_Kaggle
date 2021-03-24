@@ -30,6 +30,7 @@ class KernelSVM:
         sol = solvers.qp(Q,p,G,h)
         
         self.coef = np.array(sol['x']).flatten()
+
         self.X = X
         
         return
