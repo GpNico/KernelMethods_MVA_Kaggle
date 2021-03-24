@@ -16,6 +16,7 @@ class KernelSVM:
         self.kernel = kernel
     
     def fit(self, X, y):
+
         n, d = X.shape
         K = self.kernel(X, X)
         

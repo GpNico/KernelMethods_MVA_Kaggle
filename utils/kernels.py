@@ -5,6 +5,8 @@ from collections import Counter
 import numpy as np
 import pandas as pd
 
+from utils.mismatchtree import preprocess, MismatchKernel
+
 def linear_kernel(X, Y):
     """
     Return the Gram matrix K(X,Y) with K being the linear kernel
@@ -46,6 +48,21 @@ def spectrum_kernel(X, Y, ids = "seq", size = 6):
     kernel = np.dot(X_kmers, Y_kmers.T)
     return kernel
 
+def mismatch_kernel(X, Y, size = 6, m = 1, normalize = True):
+    """
+    Return the Gram matrix K(X,Y) with K being the mismatch kernel
+    """
+    int_seq_X = np.array(preprocess(X['seq'].tolist())) # n_samples, size_seq
+    int_seq_Y = np.array(preprocess(Y['seq'].tolist())) 
+    
+    n_samples_X, n_samples_Y = int_seq_X.shape[0], int_seq_Y.shape[0]
+    
+    concat_XY = np.concatenate((int_seq_X, int_seq_Y), axis = 0) # n_samples_X + n_samples_Y, size_seq
+    
+    mismatch_kernel = MismatchKernel(k = size, m = m).get_kernel(concat_XY, normalize = True).kernel # n_samples_X + n_samples_Y, n_samples_X + n_samples_Y
+    
+    return mismatch_kernel[:n_samples_X, n_samples_X:] 
+
 def sum_kernel(X, Y, kernels = None):
     """
     Meta Kernel for summing multiple kernels.
@@ -66,3 +83,4 @@ def normalize_kernel(X, Y, kernel = None):
     kernel_diag_X = np.diagonal(kernel_gram_XX)
     kernel_diag_Y = np.diagonal(kernel_gram_YY)
     return kernel_gram_XY/np.sqrt(np.outer(kernel_diag_X, kernel_diag_Y))
+    
