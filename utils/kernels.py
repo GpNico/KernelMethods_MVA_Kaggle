@@ -4,7 +4,6 @@
 from collections import Counter
 import numpy as np
 import pandas as pd
-from tqdm import tqdm
 
 def linear_kernel(X, Y):
     """
@@ -48,7 +47,22 @@ def spectrum_kernel(X, Y, ids = "seq", size = 6):
     return kernel
 
 def sum_kernel(X, Y, kernels = None):
+    """
+    Meta Kernel for summing multiple kernels.
+    """
     _sum = 0
     for kernel in kernels:
+        print("Doing kernel ", kernel["class"], "with parameters: ", kernel["parameters"])
         _sum = _sum + globals()[kernel["class"]](X, Y, **kernel["parameters"])
     return _sum
+
+def normalize_kernel(X, Y, kernel = None):
+    """
+    Meta Kernel for normalizing the values of another one.
+    """
+    kernel_gram_XY = globals()[kernel["class"]](X, Y, **kernel["parameters"])
+    kernel_gram_XX = globals()[kernel["class"]](X, X, **kernel["parameters"])
+    kernel_gram_YY = globals()[kernel["class"]](Y, Y, **kernel["parameters"])
+    kernel_diag_X = np.diagonal(kernel_gram_XX)
+    kernel_diag_Y = np.diagonal(kernel_gram_YY)
+    return kernel_gram_XY/np.sqrt(np.outer(kernel_diag_X, kernel_diag_Y))
