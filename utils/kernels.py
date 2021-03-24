@@ -69,7 +69,7 @@ def sum_kernel(X, Y, kernels = None):
     """
     _sum = 0
     for kernel in kernels:
-        print("Doing kernel ", kernel["class"], "with parameters: ", kernel["parameters"])
+        print("Doing", kernel["class"], "with parameters:", kernel["parameters"])
         _sum = _sum + globals()[kernel["class"]](X, Y, **kernel["parameters"])
     return _sum
 
