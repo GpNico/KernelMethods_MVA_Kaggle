@@ -56,7 +56,6 @@ if __name__ == "__main__":
                              config["model"]["class"])(**config["model"]["parameters"])
     
     evaluation = import_from_path(config["evaluation"]["filepath"])
-
     # Lists filling information for the output dataframe
     datasets = []
     metrics = []
@@ -102,7 +101,7 @@ if __name__ == "__main__":
             y_pred_test = model.predict(test)
             y_pred_test = (y_pred_test + 1)/2
             id = np.arange(1000*i, 1000*(i + 1))
-            dic = {'Id': id, 'Bound': y_pred_test[:, 0]}
+            dic = {'Id': id, 'Bound': y_pred_test}
             df = pd.DataFrame(data = dic)
             dfs.append(df)
             
@@ -112,6 +111,7 @@ if __name__ == "__main__":
             datasets.append(dataset["name"])
             metrics.append(metric)
             values.append(getattr(evaluation, metric)(y_pred, y_test))
+
     if output:
         df = pd.concat(dfs).astype('int32')
         df.to_csv('submissions/' + out_csv, index = False)
