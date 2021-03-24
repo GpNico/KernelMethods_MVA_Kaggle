@@ -1,0 +1,87 @@
+name: LinearSVM
+
+datasets:
+  - name: mat0
+    X:
+      filepath: datasets/Xtr0_mat100.csv
+      parameters:
+        delimiter: " "
+        header:
+    y:
+      filepath: datasets/Ytr0.csv
+      parameters: {}
+      
+    test:
+      filepath: datasets/Xte0_mat100.csv
+      parameters:
+        delimiter: " "
+        header:
+        
+  - name: mat1
+    X:
+      filepath: datasets/Xtr1_mat100.csv
+      parameters:
+        delimiter: " "
+        header:
+    y:
+      filepath: datasets/Ytr1.csv
+      parameters: {}
+      
+    test:
+      filepath: datasets/Xte1_mat100.csv
+      parameters:
+        delimiter: " "
+        header:
+        
+  - name: mat2
+    X:
+      filepath: datasets/Xtr2_mat100.csv
+      parameters:
+        delimiter: " "
+        header:
+    y:
+      filepath: datasets/Ytr2.csv
+      parameters: {}
+      
+    test:
+      filepath: datasets/Xte2_mat100.csv
+      parameters:
+        delimiter: " "
+        header:
+      
+
+split:
+  filepath: utils/datasetSplitter.py
+  class: BalancedTrainTestSplitter
+  parameters: 
+    seed: 42
+    percent: 0.7
+
+preprocess:
+  filepath: utils/datasetPreprocess.py
+  X:
+    - transform: convert_numpy
+      parameters: {}
+  y:
+    - transform: recode
+      parameters: {}
+    - transform: convert_numpy
+      parameters: {}
+    - transform: squeeze
+      parameters: {}
+
+model:
+  filepath: models/kernelSupportVectorMachine.py
+  class: KernelSVMClassification
+  parameters:
+    kernel: 
+      filepath: utils/kernels.py
+      class: linear_kernel
+      parameters: {}
+    alpha: 1
+
+evaluation:
+  filepath: utils/evaluation.py
+  metrics:
+    - accuracy
+    - f1_score
