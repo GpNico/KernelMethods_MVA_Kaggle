@@ -1,0 +1,86 @@
+name: MismatchKernelRidge
+
+datasets:
+  - name: mat0
+    X:
+      filepath: datasets/Xtr0.csv
+      parameters: {}
+    y:
+      filepath: datasets/Ytr0.csv
+      parameters: {}
+      
+    test:
+      filepath: datasets/Xte0.csv
+      parameters: {}
+        
+  - name: mat1
+    X:
+      filepath: datasets/Xtr1.csv
+      parameters: {}
+
+    y:
+      filepath: datasets/Ytr1.csv
+      parameters: {}
+      
+    test:
+      filepath: datasets/Xte1.csv
+      parameters: {}
+
+        
+  - name: mat2
+    X:
+      filepath: datasets/Xtr2.csv
+      parameters: {}
+
+    y:
+      filepath: datasets/Ytr2.csv
+      parameters: {}
+      
+    test:
+      filepath: datasets/Xte2.csv
+      parameters: {}
+
+      
+
+split:
+  filepath: utils/datasetSplitter.py
+  class: BalancedTrainTestSplitter
+  parameters: 
+    seed: 42
+    percent: 0.7
+
+preprocess:
+  filepath: utils/datasetPreprocess.py
+  X:
+    - transform: drop_columns
+      parameters:
+        ids: Id
+
+  y:
+    - transform: recode
+      parameters: {}
+    - transform: convert_numpy
+      parameters: {}
+    - transform: squeeze
+      parameters: {}
+
+model:
+  filepath: models/kernelRidgeRegression.py
+  class: KernelRidgeClassification
+  parameters:
+    kernel:
+      filepath: utils/kernels.py
+      class: sum_kernel
+      parameters:
+        kernels:
+        - class: mismatch_kernel
+          parameters:
+            size: 6
+            m: 2
+    alpha: 0.0001
+
+evaluation:
+  filepath: utils/evaluation.py
+  metrics:
+    - accuracy
+    - f1_score

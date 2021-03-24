@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
+from utils.mismatchtree import preprocess, MismatchKernel
+
 def linear_kernel(X, Y):
     """
     Return the Gram matrix K(X,Y) with K being the linear kernel
@@ -52,3 +54,17 @@ def sum_kernel(X, Y, kernels = None):
     for kernel in kernels:
         _sum = _sum + globals()[kernel["class"]](X, Y, **kernel["parameters"])
     return _sum
+    
+    
+def mismatch_kernel(X, Y, size = 6, m = 1, normalize = True):
+    
+    int_seq_X = np.array(preprocess(X['seq'].tolist())) # n_samples, size_seq
+    int_seq_Y = np.array(preprocess(Y['seq'].tolist())) 
+    
+    n_samples_X, n_samples_Y = int_seq_X.shape[0], int_seq_Y.shape[0]
+    
+    concat_XY = np.concatenate((int_seq_X, int_seq_Y), axis = 0) # n_samples_X + n_samples_Y, size_seq
+    
+    mismatch_kernel = MismatchKernel(k = size, m = m).get_kernel(concat_XY, normalize = True).kernel # n_samples_X + n_samples_Y, n_samples_X + n_samples_Y
+    
+    return mismatch_kernel[:n_samples_X, n_samples_X:] 

@@ -8,6 +8,8 @@ import yaml
 from importlib import import_module
 import numpy as np
 
+import time
+
 import pandas as pd
 
 def import_from_path(path_to_module, obj_name = None):
@@ -64,6 +66,8 @@ if __name__ == "__main__":
     # Applying pipeline
     # Iterate over datasets
     for i, dataset in enumerate(config["datasets"]):
+        time_beg = time.time()
+        print("Working on dataset ", i)
         # Read dataset
         X = pd.read_csv(dataset["X"]["filepath"],
                         **dataset["X"]["parameters"])
@@ -111,6 +115,8 @@ if __name__ == "__main__":
             datasets.append(dataset["name"])
             metrics.append(metric)
             values.append(getattr(evaluation, metric)(y_pred, y_test))
+            
+        print("Done ! In {} s".format(time.time() - time_beg))
 
     if output:
         df = pd.concat(dfs).astype('int32')
