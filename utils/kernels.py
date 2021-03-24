@@ -44,7 +44,7 @@ def spectrum_kernel(X, Y, ids = "seq", size = 6):
     X_kmers = X_kmers.reindex(columns = merged_columns, fill_value = 0)
     Y_kmers = Y_kmers.reindex(columns = merged_columns, fill_value = 0)
 
-    kernel = np.einsum('ij, kj -> ik', X_kmers, Y_kmers)
+    kernel = np.dot(X_kmers, Y_kmers.T)
     return kernel
 
 def sum_kernel(X, Y, kernels = None):
