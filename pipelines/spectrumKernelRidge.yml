@@ -47,7 +47,7 @@ split:
   class: BalancedTrainTestSplitter
   parameters: 
     seed: 42
-    percent: 0.7
+    percent: 0.99
 
 preprocess:
   filepath: utils/datasetPreprocess.py
@@ -75,34 +75,13 @@ model:
         kernels:
         - class: spectrum_kernel
           parameters:
-            size: 2
-        - class: spectrum_kernel
-          parameters:
-            size: 3
-        - class: spectrum_kernel
-          parameters:
             size: 4
-        - class: spectrum_kernel
-          parameters:
-            size: 5
         - class: spectrum_kernel
           parameters:
             size: 6
         - class: spectrum_kernel
           parameters:
-            size: 7
-        - class: spectrum_kernel
-          parameters:
             size: 8
-        - class: spectrum_kernel
-          parameters:
-            size: 9
-        - class: spectrum_kernel
-          parameters:
-            size: 10
-        - class: spectrum_kernel
-          parameters:
-            size: 11
         - class: spectrum_kernel
           parameters:
             size: 12
