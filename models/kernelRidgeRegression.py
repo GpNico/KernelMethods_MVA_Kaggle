@@ -11,14 +11,14 @@ class KernelRidgeRegression:
     def __init__(self, kernel, alpha):
         self.kernel = kernel
         self.alpha = alpha
-        self.coef: float
+        self.coef: np.array
         self.X: np.array
     
     def fit(self, X, y):
         n = X.shape[0]
         K = self.kernel(X, X)
         K_reg = K + self.alpha * n * np.eye(n)
-        self.coef = scipy.linalg.solve(K_reg, y)
+        self.coef = scipy.linalg.solve(K_reg, y).flatten()
         self.X = X
         return
 

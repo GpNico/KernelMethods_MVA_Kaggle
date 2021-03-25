@@ -67,6 +67,8 @@ preprocess:
       parameters: {}
     - transform: convert_numpy
       parameters: {}
+    - transform: squeeze
+      parameters: {}
 
 model:
   filepath: models/kernelRidgeRegression.py
