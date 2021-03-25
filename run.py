@@ -3,6 +3,7 @@
 Script for running a specific pipeline from a given yaml config file
 """
 
+import os
 import argparse
 import yaml
 from importlib import import_module
@@ -58,6 +59,12 @@ if __name__ == "__main__":
                              config["model"]["class"])(**config["model"]["parameters"])
     
     evaluation = import_from_path(config["evaluation"]["filepath"])
+
+    # Evaluation output directory
+    out_dir = 'submissions'
+    if output and not os.path.isdir(out_dir):
+        os.makedirs(out_dir)
+
     # Lists filling information for the output dataframe
     datasets = []
     metrics = []
@@ -120,7 +127,7 @@ if __name__ == "__main__":
 
     if output:
         df = pd.concat(dfs).astype('int32')
-        df.to_csv('submissions/' + out_csv, index = False)
+        df.to_csv(os.path.join(out_dir, out_csv), index = False)
         
     results = {"datasets": datasets, "metrics": metrics, "values": values}
     print(pd.DataFrame.from_dict(results))
